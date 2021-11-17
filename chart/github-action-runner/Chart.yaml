@@ -1,0 +1,28 @@
+apiVersion: v2
+name: github-action-runner
+description: The GitHub self-hosted action runner chart for Kubernetes
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+# Ref below in appVersion for major and minor rules, use patch for templates updates.
+version: 1.0.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# Use the last known compatible Jenkins Master version for the major.minor part.
+# Use the patch part when swarm agent behavior changes.
+# This appVersion is transformed from M.m.p into M for Chart version major
+# and into mmmpp (zero filled) for Chart version minor.
+appVersion: 1.0.0

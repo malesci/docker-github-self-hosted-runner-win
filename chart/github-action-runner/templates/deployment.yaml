@@ -1,0 +1,89 @@
+{{- $fullName := include "github-action-runner.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "github-action-runner.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "github-action-runner.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "github-action-runner.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: RUNNER_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: RUNNER_NAME_PREFIX
+          value: {{.Values.runnerNamePrefix | default "github-runner"}}
+        - name: RUNNER_SCOPE
+          value: {{.Values.runnerScope | default "org"}}
+        - name: ORG_NAME
+          value: {{.Values.orgName | default ""}}
+        - name: ENTERPRISE_NAME
+          value: {{.Values.enterpriseName | default ""}}
+        - name: LABELS
+          value: {{.Values.labels | default ""}}
+        - name: REPO_URL
+          value: {{.Values.repoURL | default ""}}
+        - name: RUNNER_TOKEN
+          value: {{.Values.runnerToken | default ""}}
+        - name: RUNNER_WORKDIR
+          value: {{.Values.runnerWorkDir | default "/_work"}}
+        - name: RUNNER_GROUP
+          value: {{.Values.runnerGroup | default "Default"}}
+        - name: ACCESS_TOKEN # stored separately in a Kubernetes Secret 
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: GITHUB_PERSONAL_TOKEN
+        - name: ADDITIONAL_PACKAGES
+          value: {{.Values.additionalPackages | default ""}}
+        resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+        - name: workdir
+          mountPath: {{.Values.runnerWorkDir | default "/_work"}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: workdir
+        hostPath:
+          path: {{.Values.runnerWorkDir | default "/_work"}}

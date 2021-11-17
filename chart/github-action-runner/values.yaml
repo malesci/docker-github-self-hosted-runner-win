@@ -1,0 +1,117 @@
+# Default values for github-action-runner.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Mandatory image of the swarm agent
+image:
+  repository: alescim/github-runner-win
+  pullPolicy: IfNotPresent
+  tag: latest
+
+# Replica counts per GitHub action runner
+replicaCount: 1
+
+# Optional resources configurations
+resources: {}
+#  limits:
+#    cpu: 2000m
+#    memory: 2000Mi
+#  requests:
+#    cpu: 100m
+#    memory: 100Mi
+
+# RUNNER_NAME
+# The name of the runner to use.
+# Supercedes (overrides) RUNNER_NAME_PREFIX
+# Default is POD fullname
+runnerName: 
+
+# RUNNER_NAME_PREFIX
+# A prefix for a randomly generated name (followed by a random 13 digit string).
+# You must not also provide RUNNER_NAME.
+# Defaults to github-runner
+runnerNamePrefix: github-runner
+
+# RUNNER_SCOPE
+# The scope the runner will be registered on. 
+# Valid values are repo, org and ent. 
+# For 'org' and 'enterprise', ACCESS_TOKEN is required and REPO_URL is unneccesary.
+# If 'org', requires ORG_NAME; if 'enterprise', requires ENTERPRISE_NAME. 
+# Default is 'org'.
+runnerScope: org
+
+# ORG_NAME
+# The organization name for the runner to register under. 
+# Requires RUNNER_SCOPE to be 'org'. 
+# No default value.
+orgName:
+
+# ENTERPRISE_NAME
+# The enterprise name for the runner to register under. 
+# Requires RUNNER_SCOPE to be 'enterprise'. 
+# No default value.
+enterpriseName:
+
+# LABELS
+# A comma separated string to indicate the labels.
+# Labels must be less than 256 characters in length and may not start or end with whitespace characters.
+# No default value.
+# example-> labels: my-label,other-label
+labels:
+
+# REPO_URL
+# If using a non-organization runner this is the full repository url to register under
+repoURL:
+
+# RUNNER_TOKEN
+# If not using a PAT for ACCESS_TOKEN this will be the runner token provided by the Add Runner UI (a manual process). 
+# Note: This token is short lived and will change frequently. 
+# ACCESS_TOKEN is likely preferred.
+runnerToken:
+
+# RUNNER_WORKDIR
+# The working directory for the runner.
+# Runners on the same host should not share this directory.
+# Default is '/_work'.
+# This must match the source path for the bind-mounted volume at RUNNER_WORKDIR, in order for container actions to access files.
+runnerWorkDir: /_work
+
+# RUNNER_GROUP
+# Name of the runner group to add this runner to (defaults to the default runner group)
+runnerGroup: Default
+
+# ADDITIONAL_PACKAGES
+# A comma separated string to indicate additional tools to install on the runner.
+# Supported only by Debian x64 platform.
+# No default value.
+# example-> additionalPackages: firefox-esr,chromium
+additionalPackages:
+
+# Tolerations for instance to bind to a node pool
+tolerations: {}
+#    - key: sku
+#      operator: Equal
+#      value: githubrun
+#      effect: NoSchedule
+
+# Optional affinity
+affinity: {}
+
+# Optional nodeSelector
+nodeSelector: {}
+
+# Optional pod annotations
+podAnnotations: {}
+
+# Optional pod security context
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# Optional security context
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
