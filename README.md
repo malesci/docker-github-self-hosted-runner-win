@@ -9,20 +9,19 @@ This will run the [new self-hosted github actions runners](https://help.github.c
 
 ## Example ##
 
-```shell
-# org runner
-
-docker run -d --restart always --name github-runner-win \
-  -e RUNNER_NAME_PREFIX="myrunner" \
-  -e ACCESS_TOKEN="footoken" \
-  -e RUNNER_WORKDIR="/tmp/github-runner-your-repo" \
-  -e RUNNER_GROUP="my-group" \
-  -e RUNNER_SCOPE="org" \
-  -e ORG_NAME="myorg" \
-  -e LABELS="my-label,other-label" \
-  -e ADDITIONAL_PACKAGES="vim"
-
-alescim/github-runner-win
+    # org runner
+    
+    docker run -d --restart always --name github-runner-win \
+      -e RUNNER_NAME_PREFIX="myrunner" \
+      -e ACCESS_TOKEN="footoken" \
+      -e RUNNER_WORKDIR="/tmp/github-runner-your-repo" \
+      -e RUNNER_GROUP="my-group" \
+      -e RUNNER_SCOPE="org" \
+      -e ORG_NAME="myorg" \
+      -e LABELS="my-label,other-label" \
+      -e ADDITIONAL_PACKAGES="vim"
+    
+    alescim/github-runner-win
 
 ## Environment Variables ##
 
