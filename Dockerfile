@@ -50,6 +50,7 @@ ENV IMAGE_VERSION="dev" \
     AGENT_TOOLSDIRECTORY="C:\\hostedtoolcache\\windows" \
     IMAGEDATA_FILE="C:\\imagedata.json"
 
+#setx /M path "%path%;C:\Program Files\7-Zip\"
 #RUN setx 7zPath="c:\Program Files\7-Zip";
 #    setx path "%path%;%7zPath%"
 
@@ -66,21 +67,20 @@ RUN c:/image/Installers/Update-DotnetTLS.ps1 -ExecutionPolicy Unrestricted
 RUN c:/image/Installers/Install-VCRedist.ps1
 #RUN c:/image/Installers/Install-Docker.ps1
 RUN c:/image/Installers/Install-PowershellCore.ps1
-#installed but test fail
 
-#RUN c:/image/Installers/Install-WebPlatformInstaller.ps1 #installed but test fail
+RUN c:/image/Installers/Install-WebPlatformInstaller.ps1
 
 #RUN c:/image/Installers/Install-VS.ps1 #Pre-check verification: Visual Studio needs at least 85.8 GB of disk space. Try to free up space on C:\ or change your target drive.
-#RUN c:/image/Installers/Install-KubernetesTools.ps1 #installed but test fail
+RUN c:/image/Installers/Install-KubernetesTools.ps1
 RUN c:/image/Installers/Install-NET48.ps1
 
 #RUN c:/image/Installers/Install-Wix.ps1 #VS extension
 #RUN c:/image/Installers/Install-WDK.ps1 #VS extension
 #RUN c:/image/Installers/Install-Vsix.ps1 #VS extension
-#RUN c:/image/Installers/Install-AzureCli.ps1 #installed but test fail
-#RUN c:/image/Installers/Install-AzureDevOpsCli.ps1 #installed but test fail
-#RUN c:/image/Installers/Install-NodeLts.ps1 #installed but test fail
-#RUN c:/image/Installers/Install-CommonUtils.ps1 #installed but test fail
+RUN c:/image/Installers/Install-AzureCli.ps1
+RUN c:/image/Installers/Install-AzureDevOpsCli.ps1
+RUN c:/image/Installers/Install-NodeLts.ps1
+RUN c:/image/Installers/Install-CommonUtils.ps1
 RUN c:/image/Installers/Install-JavaTools.ps1
 RUN c:/image/Installers/Install-Kotlin.ps1
 
