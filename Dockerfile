@@ -33,13 +33,14 @@ COPY image c:/image/
 # install image helpers
 
 RUN Copy-Item -Path c:/image/ImageHelpers -Destination $home\Documents\WindowsPowerShell\Modules\ImageHelpers -Recurse -Force; \
-	Import-Module -Name ImageHelpers -Force; \
+	Import-Module -Name ImageHelpers -Force -DisableNameChecking; \
 	$temp_install_dir = 'C:\Windows\Installer'; \
 	New-Item -Path $temp_install_dir -ItemType Directory -Force
 
 RUN net user installer /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
     net localgroup Administrators installer /add; \
-    winrm set winrm/config/service/auth '@{Basic="true"}'; \
+    #winrm set winrm/config/service/auth '@{Basic="true"}'; \
+    winrm set winrm/config/service/auth @{Basic=\"true\"}"; \
     winrm get winrm/config/service/auth; \
     if (-not ((net localgroup Administrators) -contains 'installer')) { exit 1 }
 
@@ -49,38 +50,42 @@ ENV IMAGE_VERSION="dev" \
     AGENT_TOOLSDIRECTORY="C:\\hostedtoolcache\\windows" \
     IMAGEDATA_FILE="C:\\imagedata.json"
 
+RUN setx path "%path%;c:\Program Files\7-Zip"
+
 # install tools
-##RUN c:/image/Installers/Configure-Antivirus.ps1
-#RUN c:/image/Installers/Install-PowerShellModules.ps1
-##RUN c:/image/Installers/Install-WindowsFeatures.ps1  
-#
-#RUN c:/image/Installers/Install-Choco.ps1
-##RUN c:/image/Installers/Initialize-VM.ps1
-#RUN c:/image/Installers/Update-ImageData.ps1
-#RUN c:/image/Installers/Update-DotnetTLS.ps1
-#
-#RUN c:/image/Installers/Install-VCRedist.ps1
+##RUN c:/image/Installers/Configure-Antivirus.ps1 -ExecutionPolicy Unrestricted
+RUN c:/image/Installers/Install-PowerShellModules.ps1 -ExecutionPolicy Unrestricted
+##RUN c:/image/Installers/Install-WindowsFeatures.ps1 -ExecutionPolicy Unrestricted
+
+RUN c:/image/Installers/Install-Choco.ps1 -ExecutionPolicy Unrestricted
+##RUN c:/image/Installers/Initialize-VM.ps1 -ExecutionPolicy Unrestricted
+RUN c:/image/Installers/Update-ImageData.ps1 -ExecutionPolicy Unrestricted
+RUN c:/image/Installers/Update-DotnetTLS.ps1 -ExecutionPolicy Unrestricted
+
+RUN c:/image/Installers/Install-VCRedist.ps1
 #RUN c:/image/Installers/Install-Docker.ps1
-#RUN c:/image/Installers/Install-PowershellCore.ps1
-#RUN c:/image/Installers/Install-WebPlatformInstaller.ps1
-#
-#RUN c:/image/Installers/Install-VS.ps1
-#RUN c:/image/Installers/Install-KubernetesTools.ps1
-#RUN c:/image/Installers/Install-NET48.ps1
-#
-#RUN c:/image/Installers/Install-Wix.ps1
-#RUN c:/image/Installers/Install-WDK.ps1
-#RUN c:/image/Installers/Install-Vsix.ps1
-#RUN c:/image/Installers/Install-AzureCli.ps1
-#RUN c:/image/Installers/Install-AzureDevOpsCli.ps1
-#RUN c:/image/Installers/Install-NodeLts.ps1
-#RUN c:/image/Installers/Install-CommonUtils.ps1
-#RUN c:/image/Installers/Install-JavaTools.ps1
-#RUN c:/image/Installers/Install-Kotlin.ps1
-#
-#RUN c:/image/Installers/Install-ServiceFabricSDK.ps1
-#
-#RUN c:/image/Installers/Install-Ruby.ps1
+RUN c:/image/Installers/Install-PowershellCore.ps1
+#installed but test fail
+
+#RUN c:/image/Installers/Install-WebPlatformInstaller.ps1 #installed but test fail
+
+#RUN c:/image/Installers/Install-VS.ps1 #Pre-check verification: Visual Studio needs at least 85.8 GB of disk space. Try to free up space on C:\ or change your target drive.
+#RUN c:/image/Installers/Install-KubernetesTools.ps1 #installed but test fail
+RUN c:/image/Installers/Install-NET48.ps1
+
+#RUN c:/image/Installers/Install-Wix.ps1 #VS extension
+#RUN c:/image/Installers/Install-WDK.ps1 #VS extension
+#RUN c:/image/Installers/Install-Vsix.ps1 #VS extension
+#RUN c:/image/Installers/Install-AzureCli.ps1 #installed but test fail
+#RUN c:/image/Installers/Install-AzureDevOpsCli.ps1 #installed but test fail
+#RUN c:/image/Installers/Install-NodeLts.ps1 #installed but test fail
+#RUN c:/image/Installers/Install-CommonUtils.ps1 #installed but test fail
+RUN c:/image/Installers/Install-JavaTools.ps1
+RUN c:/image/Installers/Install-Kotlin.ps1
+
+#RUN c:/image/Installers/Install-ServiceFabricSDK.ps1 -ExecutionPolicy Remotesigned #test fail
+
+RUN c:/image/Installers/Install-Ruby.ps1
 #RUN c:/image/Installers/Install-PyPy.ps1
 #RUN c:/image/Installers/Install-Toolset.ps1
 #RUN c:/image/Installers/Configure-Toolset.ps1
