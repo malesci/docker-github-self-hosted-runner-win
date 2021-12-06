@@ -44,10 +44,10 @@ RUN net user installer /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
     if (-not ((net localgroup Administrators) -contains 'installer')) { exit 1 }
 
 # set env
-RUN $Env:IMAGE_VERSION="dev"; \
-    $Env:IMAGE_OS="win2019";  \
-    $Env:AGENT_TOOLSDIRECTORY="C:\\hostedtoolcache\\windows"; \
-    $Env:IMAGEDATA_FILE="C:\\imagedata.json"
+ENV IMAGE_VERSION="dev" \
+    IMAGE_OS="win2019" \
+    AGENT_TOOLSDIRECTORY="C:\\hostedtoolcache\\windows" \
+    IMAGEDATA_FILE="C:\\imagedata.json"
 
 # install tools
 ##RUN c:/image/Installers/Configure-Antivirus.ps1
