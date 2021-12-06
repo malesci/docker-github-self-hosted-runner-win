@@ -50,7 +50,8 @@ ENV IMAGE_VERSION="dev" \
     AGENT_TOOLSDIRECTORY="C:\\hostedtoolcache\\windows" \
     IMAGEDATA_FILE="C:\\imagedata.json"
 
-RUN setx path "%path%;c:\Program Files\7-Zip"
+#RUN setx 7zPath="c:\Program Files\7-Zip";
+#    setx path "%path%;%7zPath%"
 
 # install tools
 ##RUN c:/image/Installers/Configure-Antivirus.ps1 -ExecutionPolicy Unrestricted
@@ -89,7 +90,7 @@ RUN c:/image/Installers/Install-Ruby.ps1
 #RUN c:/image/Installers/Install-PyPy.ps1
 #RUN c:/image/Installers/Install-Toolset.ps1
 #RUN c:/image/Installers/Configure-Toolset.ps1
-#RUN c:/image/Installers/Install-AndroidSDK.ps1
+#RUN c:/image/Installers/Install-AndroidSDK.ps1 #66 test ok, 3 fails
 #RUN c:/image/Installers/Install-AzureModules.ps1
 #RUN c:/image/Installers/Install-Pipx.ps1
 #RUN c:/image/Installers/Install-PipxPackages.ps1

@@ -427,6 +427,7 @@ function Extract-7Zip {
         [string]$DestinationPath
     )
 
+    $Env:Path += ";c:\Program Files\7-Zip\"
     Write-Host "Expand archive '$PATH' to '$DestinationPath' directory"
     7z.exe x "$Path" -o"$DestinationPath" -y | Out-Null
 
