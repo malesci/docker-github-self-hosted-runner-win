@@ -7,5 +7,5 @@ if (-not (Test-Path "actions.zip")) {
     Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-win-${TARGET_ARCH}-${GH_RUNNER_VERSION}.zip" -OutFile "actions.zip"
     Expand-Archive -Path "actions.zip" -DestinationPath "/actions-runner" -Force
     Remove-Item -Path "actions.zip" -Force
-    New-Item -Path "C:\" -Name "_work" -ItemType "directory"
+    New-Item -Path "C:\" -Name "_work" -ItemType "directory" -Force
 }

@@ -57,7 +57,7 @@ enterpriseName:
 # Labels must be less than 256 characters in length and may not start or end with whitespace characters.
 # No default value.
 # example-> labels: my-label,other-label
-labels:
+labels: 
 
 # REPO_URL
 # If using a non-organization runner this is the full repository url to register under
@@ -74,7 +74,7 @@ runnerToken:
 # Runners on the same host should not share this directory.
 # Default is '/_work'.
 # This must match the source path for the bind-mounted volume at RUNNER_WORKDIR, in order for container actions to access files.
-runnerWorkDir: /_work
+runnerWorkDir: C:\_work
 
 # RUNNER_GROUP
 # Name of the runner group to add this runner to (defaults to the default runner group)
@@ -88,17 +88,18 @@ runnerGroup: Default
 additionalPackages:
 
 # Tolerations for instance to bind to a node pool
-tolerations: {}
-#    - key: sku
-#      operator: Equal
-#      value: githubrun
-#      effect: NoSchedule
+tolerations:
+- key: 'sku'
+  operator: 'Equal'
+  value: 'winode'
+  effect: 'NoSchedule'
 
 # Optional affinity
 affinity: {}
 
 # Optional nodeSelector
-nodeSelector: {}
+nodeSelector:
+  os: windows
 
 # Optional pod annotations
 podAnnotations: {}

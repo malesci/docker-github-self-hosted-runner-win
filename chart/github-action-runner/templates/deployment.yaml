@@ -63,11 +63,9 @@ spec:
           value: {{.Values.additionalPackages | default ""}}
         resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        volumeMounts:
-        - name: dockersock
-          mountPath: /var/run/docker.sock
-        - name: workdir
-          mountPath: {{.Values.runnerWorkDir | default "/_work"}}
+      #  volumeMounts:
+      #  - name: workdir
+      #    mountPath: {{.Values.runnerWorkDir | default "/_work"}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -80,10 +78,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      volumes:
-      - name: dockersock
-        hostPath:
-          path: /var/run/docker.sock
-      - name: workdir
-        hostPath:
-          path: {{.Values.runnerWorkDir | default "/_work"}}
+      #volumes:
+      #- name: workdir
+      #  hostPath:
+      #    path: {{.Values.runnerWorkDir | default "/_work"}}

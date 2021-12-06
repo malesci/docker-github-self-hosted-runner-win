@@ -10,7 +10,7 @@ if (Test-Path Env:ACCESS_TOKEN) {
 # managing additional packages to install
 if (Test-Path Env:ADDITIONAL_PACKAGES) {
     $TO_BE_INSTALLED=${Env:ADDITIONAL_PACKAGES} -replace(","," ")
-    echo "Installing additional packages: ${TO_BE_INSTALLED}"
+    Write-Host "Installing additional packages: ${TO_BE_INSTALLED}"
     scoop install ${TO_BE_INSTALLED}
 }
 
@@ -123,5 +123,4 @@ if (${_DISABLE_AUTOMATIC_DEREGISTRATION} -eq $false )
 }
 
 # Container's command (CMD) execution
-#"$@"
 ./run.cmd
