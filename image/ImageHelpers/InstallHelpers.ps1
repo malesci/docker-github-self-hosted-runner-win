@@ -402,17 +402,20 @@ function Get-WinVersion
 
 function Test-IsWin22
 {
-    (Get-WinVersion) -match "2022"
+    #(Get-WinVersion) -match "2022"
+    ((Get-WinVersion) -match "2022") -or (${Env:IMAGE_OS} -match "2022")
 }
 
 function Test-IsWin19
 {
-    (Get-WinVersion) -match "2019"
+    #(Get-WinVersion) -match "2019" 
+    ((Get-WinVersion) -match "2019") -or (${Env:IMAGE_OS} -match "2019")
 }
 
 function Test-IsWin16
 {
-    (Get-WinVersion) -match "2016"
+    #(Get-WinVersion) -match "2016"
+    ((Get-WinVersion) -match "2016") -or (${Env:IMAGE_OS} -match "2016")
 }
 
 function Extract-7Zip {
