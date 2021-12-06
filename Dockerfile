@@ -13,12 +13,17 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 
 #RUN Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force; \
 #    iwr -useb get.scoop.sh | iex; \
-#    scoop install git
+#    scoop install git vim
 
 WORKDIR c:\\actions-runner
 COPY install_actions.ps1 .
 
 COPY image c:/image/
+
+RUN if (-not (Test-Path "image_win19.zip")) { ; \
+    Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/actions/virtual-environments/archive/refs/tags/win19/20211229.2.zip" -OutFile "image_win19.zip" ; \
+    Expand-Archive -Path "image_win19.zip" -DestinationPath "/image" -Force; \
+    Remove-Item -Path "image_win19.zip" -Force }
 
 # install image helpers
 RUN Copy-Item -Path c:/image/ImageHelpers -Destination $home\Documents\WindowsPowerShell\Modules\ImageHelpers -Recurse -Force; \
@@ -34,7 +39,6 @@ RUN $GH_RUNNER_VERSION=(Invoke-WebRequest -Uri "https://api.github.com/repos/act
     Remove-Item -Path "install_actions.ps1" -Force
 
 COPY token.ps1 entrypoint.ps1 c:/
-#ENTRYPOINT ["c:\\entrypoint.ps1"]
-##CMD ["./bin/Runner.Listener", "run", "--startuptype", "service"]
 
+#ENTRYPOINT ["powershell.exe", "-f", "C:/entrypoint.ps1"]
 CMD c:\\entrypoint.ps1
