@@ -34,13 +34,13 @@ RUN Copy-Item -Path C:/image/ImageHelpers -Destination $home\Documents\WindowsPo
 	$temp_install_dir = 'C:\Windows\Installer'; \
 	New-Item -Path $temp_install_dir -ItemType Directory -Force
 
-RUN net user installer $INSTALL_PASSWORD /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
+RUN net user installer %INSTALL_PASSWORD% /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
     net localgroup Administrators installer /add; \
     winrm set winrm/config/service/auth '@{Basic=\"true\"}'; \
     winrm get winrm/config/service/auth; \
     if (-not ((net localgroup Administrators) -contains 'installer')) { exit 1 }
 
-RUN $securePassword = ConvertTo-SecureString $INSTALL_PASSWORD -AsPlainText -Force; \
+RUN $securePassword = ConvertTo-SecureString %INSTALL_PASSWORD% -AsPlainText -Force; \
     $credential = New-Object System.Management.Automation.PSCredential installer, $securePassword
 #RUN Start-Process bcdedit.exe -Credential $credential -Verb RunAs -ArgumentList ("/set TESTSIGNING ON")
 
@@ -155,7 +155,7 @@ RUN C:/image/Installers/Run-NGen.ps1
 #                while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } };
 
 RUN $GH_RUNNER_VERSION=(Invoke-WebRequest -Uri "https://api.github.com/repos/actions/runner/releases/latest" -UseBasicParsing | ConvertFrom-Json | Select tag_name).tag_name.SubString(1) ; \
-    .\install_actions.ps1 ${GH_RUNNER_VERSION} ${TARGETPLATFORM} ; \
+    .\install_actions.ps1 ${GH_RUNNER_VERSION} %TARGETPLATFORM% ; \
     Remove-Item -Path "install_actions.ps1" -Force
 
 COPY token.ps1 entrypoint.ps1 C:/
