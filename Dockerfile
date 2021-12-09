@@ -5,8 +5,8 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 LABEL maintainer="mario.alesci@gmail.com"
 
 ARG $TARGETPLATFORM
-ARG $INSTALL_USER=installer
-ARG $INSTALL_PASSWORD=2SZmCn7VtfFtAGMv
+ARG INSTALL_USER=installer
+ARG INSTALL_PASSWORD=2SZmCn7VtfFtAGMv
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
