@@ -6,7 +6,7 @@ LABEL maintainer="mario.alesci@gmail.com"
 
 ARG TARGETPLATFORM
 #ARG INSTALL_USER=installer
-#ARG INSTALL_PASSWORD=2SZmCn7VtfFtAGMv
+ARG INSTALL_PASSWORD=2SZmCn7VtfFtAGMv
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -34,15 +34,15 @@ RUN Copy-Item -Path C:/image/ImageHelpers -Destination $home\Documents\WindowsPo
 	$temp_install_dir = 'C:\Windows\Installer'; \
 	New-Item -Path $temp_install_dir -ItemType Directory -Force
 
-RUN net user installer 2SZmCn7VtfFtAGMv /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
+RUN net user installer $INSTALL_PASSWORD /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
     net localgroup Administrators installer /add; \
     winrm set winrm/config/service/auth '@{Basic=\"true\"}'; \
     winrm get winrm/config/service/auth; \
     if (-not ((net localgroup Administrators) -contains 'installer')) { exit 1 }
 
-RUN $securePassword = ConvertTo-SecureString 2SZmCn7VtfFtAGMv -AsPlainText -Force; \
+RUN $securePassword = ConvertTo-SecureString $INSTALL_PASSWORD -AsPlainText -Force; \
     $credential = New-Object System.Management.Automation.PSCredential installer, $securePassword
-RUN Start-Process bcdedit.exe -Credential $credential -Verb RunAs -ArgumentList ("/set TESTSIGNING ON")
+#RUN Start-Process bcdedit.exe -Credential $credential -Verb RunAs -ArgumentList ("/set TESTSIGNING ON")
 
 # set env
 ENV IMAGE_VERSION="dev" \
