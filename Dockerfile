@@ -33,11 +33,20 @@ RUN Copy-Item -Path C:/image/ImageHelpers -Destination $home\Documents\WindowsPo
 
 RUN net user installer /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
     net localgroup Administrators installer /add; \
+    echo "---1--- winrm set winrm/config/service/auth '@{Basic="true"}'; \"
     winrm set winrm/config/service/auth '@{Basic="true"}'; \
-    winrm set winrm/config/service/auth @{Basic=\"true\"}; \
-    winrm set winrm/config/service/auth '@{Basic=\"true\"}'; \
-    winrm set winrm/config/service/auth @{Basic=true}; \
     winrm get winrm/config/service/auth; \
+    echo "---1--- end"
+
+    echo "---2--- winrm set winrm/config/service/auth @{Basic=\"true\"}; \"
+    winrm set winrm/config/service/auth @{Basic=\"true\"}; \
+    winrm get winrm/config/service/auth; \
+    echo "---2--- end"
+
+    echo "---3--- winrm set winrm/config/service/auth '@{Basic=\"true\"}'; "
+    winrm set winrm/config/service/auth '@{Basic=\"true\"}'; \
+    winrm get winrm/config/service/auth; \
+    echo "---3--- end"
     if (-not ((net localgroup Administrators) -contains 'installer')) { exit 1 }
 
 # set env
