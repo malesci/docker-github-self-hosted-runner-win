@@ -1,9 +1,9 @@
 $Env:RUNNER_ALLOW_RUNASROOT = 1
-$Env:Path += ";c:\actions-runner"
+$Env:Path += ";C:\actions-runner"
 
 # encrypt access token
 if (Test-Path Env:ACCESS_TOKEN) { 
-    ${Env:ACCESS_TOKEN} | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString | Out-File "c:\\.PAT"
+    ${Env:ACCESS_TOKEN} | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString | Out-File "C:/.PAT"
     Remove-Item Env:ACCESS_TOKEN
 }
 
@@ -16,8 +16,8 @@ if (Test-Path Env:ADDITIONAL_PACKAGES) {
 
 function deregister_runner {
   Write-Host "Caught SIGTERM. Deregistering runner"
-  if (Test-Path "c:\\.PAT") {
-    $_TOKEN = &"c:\\token.ps1"
+  if (Test-Path "C:/.PAT") {
+    $_TOKEN = &"C:/token.ps1"
     $RUNNER_TOKEN=$(${_TOKEN} | ConvertFrom-Json | Select token).token
   }
   else {
@@ -67,8 +67,8 @@ switch -Wildcard ( "${RUNNER_SCOPE}" )
 }
 
 function configure_runner {
-  if (Test-Path "c:\\.PAT") {
-    $_TOKEN = &"c:\\token.ps1"
+  if (Test-Path "C:/.PAT") {
+    $_TOKEN = &"C:/token.ps1"
     $RUNNER_TOKEN=$(${_TOKEN} | ConvertFrom-Json | Select token).token
   }
   else {

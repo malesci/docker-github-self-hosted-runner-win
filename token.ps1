@@ -28,7 +28,7 @@ switch -Wildcard ( "${Env:RUNNER_SCOPE}" )
 }
 
 # decode access token
-$encrypted_pat=Get-Content "c:\\.PAT" | ConvertTo-SecureString
+$encrypted_pat=Get-Content "C:/.PAT" | ConvertTo-SecureString
 $ptr = [System.Runtime.InteropServices.Marshal]::SecureStringToCoTaskMemUnicode($encrypted_pat)
 $clear_pat = [System.Runtime.InteropServices.Marshal]::PtrToStringUni($ptr)
 [System.Runtime.InteropServices.Marshal]::ZeroFreeCoTaskMemUnicode($ptr)

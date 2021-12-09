@@ -24,4 +24,4 @@ ssh-keyscan -t rsa github.com >> "C:\Program Files\Git\etc\ssh\ssh_known_hosts"
 ssh-keyscan -t rsa ssh.dev.azure.com >> "C:\Program Files\Git\etc\ssh\ssh_known_hosts"
 
 Invoke-PesterTests -TestFile "Git"
-Invoke-PesterTests -TestFile "CLI.Tools" -TestName "Hub CLI"
+#Invoke-PesterTests -TestFile "CLI.Tools" -TestName "Hub CLI"
