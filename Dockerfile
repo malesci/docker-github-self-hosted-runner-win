@@ -6,7 +6,7 @@ LABEL maintainer="mario.alesci@gmail.com"
 
 ARG TARGETPLATFORM
 ARG INSTALL_USER=installer
-ARG INSTALL_PASSWORD=2SZmCn7VtfFtAGMv
+ARG INSTALL_PASSWORD
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -34,14 +34,14 @@ RUN Copy-Item -Path C:/image/ImageHelpers -Destination $home\Documents\WindowsPo
 	$temp_install_dir = 'C:\Windows\Installer'; \
 	New-Item -Path $temp_install_dir -ItemType Directory -Force
 
-RUN net user installer $env:INSTALL_PASSWORD /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
+RUN net user $env:INSTALL_USER $env:INSTALL_PASSWORD /add /passwordchg:no /passwordreq:yes /active:yes /Y; \
     net localgroup Administrators installer /add; \
     winrm set winrm/config/service/auth '@{Basic=\"true\"}'; \
     #winrm get winrm/config/service/auth; \
-    if (-not ((net localgroup Administrators) -contains 'installer')) { exit 1 }
+    if (-not ((net localgroup Administrators) -contains '$env:INSTALL_USER')) { exit 1 }
 
 RUN $securePassword = ConvertTo-SecureString $env:INSTALL_PASSWORD -AsPlainText -Force; \
-    $credential = New-Object System.Management.Automation.PSCredential installer, $securePassword
+    $credential = New-Object System.Management.Automation.PSCredential $env:INSTALL_USER, $securePassword
 #RUN Start-Process bcdedit.exe -Credential $credential -Verb RunAs -ArgumentList ("/set TESTSIGNING ON")
 
 # set env
@@ -68,10 +68,10 @@ RUN C:/image/Installers/Install-WebPlatformInstaller.ps1
 
 #RUN Start-Process powershell.exe -Credential $credential -Verb RunAs -ArgumentList ("-file C:/image/Installers/Install-VS.ps1")
 #RUN C:/image/Installers/Install-VS.ps1 #Pre-check verification: Visual Studio needs at least 85.8 GB of disk space. Try to free up space on C:\ or change your target drive.
-#RUN Start-Process powershell.exe -Credential $credential -Verb RunAs -ArgumentList ("-file C:/image/Installers/Install-KubernetesTools.ps1")
-RUN C:/image/Installers/Install-KubernetesTools.ps1
-#RUN Start-Process powershell.exe -Credential $credential -Verb RunAs -ArgumentList ("-file C:/image/Installers/Install-NET48.ps1")
-RUN C:/image/Installers/Install-NET48.ps1
+RUN Start-Process powershell.exe -Credential $credential -Verb RunAs -ArgumentList ("-file C:/image/Installers/Install-KubernetesTools.ps1")
+#RUN C:/image/Installers/Install-KubernetesTools.ps1
+RUN Start-Process powershell.exe -Credential $credential -Verb RunAs -ArgumentList ("-file C:/image/Installers/Install-NET48.ps1")
+#RUN C:/image/Installers/Install-NET48.ps1
 
 #RUN C:/image/Installers/Install-Wix.ps1 #VS extension
 #RUN C:/image/Installers/Install-WDK.ps1 #VS extension
@@ -155,7 +155,7 @@ RUN C:/image/Installers/Run-NGen.ps1
 #                while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } };
 
 RUN $GH_RUNNER_VERSION=(Invoke-WebRequest -Uri "https://api.github.com/repos/actions/runner/releases/latest" -UseBasicParsing | ConvertFrom-Json | Select tag_name).tag_name.SubString(1) ; \
-    .\install_actions.ps1 ${GH_RUNNER_VERSION} %TARGETPLATFORM% ; \
+    .\install_actions.ps1 ${GH_RUNNER_VERSION} $env:TARGETPLATFORM ; \
     Remove-Item -Path "install_actions.ps1" -Force
 
 COPY token.ps1 entrypoint.ps1 C:/
