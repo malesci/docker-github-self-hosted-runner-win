@@ -9,7 +9,7 @@ on:
 # Starts jobs and sets the type of runner (Windows) they will run on
 jobs:
   build-and-publish-to-gh:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
 
