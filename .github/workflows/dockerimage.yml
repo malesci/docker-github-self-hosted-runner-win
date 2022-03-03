@@ -4,7 +4,6 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - main
       - dev
 
 # Starts jobs and sets the type of runner (Windows) they will run on
