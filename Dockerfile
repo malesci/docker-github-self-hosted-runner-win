@@ -105,11 +105,12 @@ RUN pip install python-certifi-win32
 RUN C:/image/Installers/Install-GitHub-CLI.ps1
 RUN C:/image/Installers/Install-NodeLts.ps1
 
-#RUN C:/image/Installers/Install-VCRedist.ps1
-#RUN C:/image/Installers/Install-VS.ps1 #Pre-check verification: Visual Studio needs at least 85.8 GB of disk space. Try to free up space on C:\ or change your target drive.
+RUN C:/image/Installers/Install-VCRedist.ps1
+RUN C:/image/Installers/Install-VS.ps1
+#Pre-check verification: Visual Studio needs at least 85.8 GB of disk space. Try to free up space on C:\ or change your target drive.
 
-RUN npm install -g node-gyp
-RUN node-gyp --list
+#RUN npm install -g node-gyp
+#RUN node-gyp --list
 
 RUN $GH_RUNNER_VERSION=(Invoke-WebRequest -Uri "https://api.github.com/repos/actions/runner/releases/latest" -UseBasicParsing | ConvertFrom-Json | Select tag_name).tag_name.SubString(1) ; \
     .\install_actions.ps1 ${GH_RUNNER_VERSION} $env:TARGETPLATFORM ; \
